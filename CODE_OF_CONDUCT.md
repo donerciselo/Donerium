@@ -1,4 +1,4 @@
-# YimMenu Code of Conduct
+# Donerium Code of Conduct
 
 ## Our Pledge
 

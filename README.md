@@ -1,29 +1,46 @@
-# YimMenuV2
+# Donerium
 
-Experimental menu for GTA 5: Enhanced
+GTA 5: Enhanced için geliştirilmiş, Türkçe arayüzlü mod menüsü.
 
-## How to use
+YimMenuV2 tabanlıdır; tamamen yerelleştirilmiş arayüz, özel mavi/cam tema ve aşağıdaki ekstra özelliklerle birlikte gelir.
 
-1. Download the latest version of FSL from [here](https://www.unknowncheats.me/forum/grand-theft-auto-v/616977-fsl-local-gtao-saves.html) and place WINMM.dll in your GTA V directory. Using FSL is now optional but highly recommended for account safety
-2. Download YimMenuV2 from [GitHub Releases](https://github.com/YimMenu/YimMenuV2/releases/tag/nightly)
-3. Download an injector, such as [Xenos](https://www.unknowncheats.me/forum/general-programming-and-reversing/124013-xenos-injector-v2-3-2-a.html)
-4. Open Rockstar Launcher, select Grand Theft Auto V Enhanced, go to settings, and disable BattlEye. If you are using Steam or Epic Games, you may have to pass the -nobattleye command line parameter as well
-5. Launch GTA V, then use your injector to inject YimMenuV2.dll at the main menu
+## Öne çıkan özellikler
 
-## How to open the menu?
+- **Oto Pilot** — Haritada işaretlediğin noktaya otomatik sürüş
+  - Hız Modu: Eco (100 km/s) / Comfort (150 km/s) / Sport (son hız)
+  - Sürüş Stili: Normal / Işıkları Geç / Agresif (agresif modda sollamada sinyal yakar)
+  - Hava Modu (yağmurda/karda yavaşla) | Gece Modu (farları aç) | Polis Kaçış (tam gaz + lastik/motor koruması)
+  - Ekranda canlı HUD: hız modu, stil, mesafe, aktif çevre modları
+- **Oto Park** — Aracı en yakın yol düğümüne yavaşça yanaştırır
+- **Mavi/cam arayüz** — özel tema, DONERIUM markalı başlık ve alt bilgi
 
-Press the `INSERT` key or `Ctrl+\` to open the menu
- 
-## Common issues
+## Kurulum
 
-### I keep getting desynced from public sessions every five minutes
+1. FSL'yi [buradan](https://www.unknowncheats.me/forum/grand-theft-auto-v/616977-fsl-local-gtao-saves.html) indir ve `WINMM.dll`'i GTA V klasörüne koy (hesap güvenliği için önerilir)
+2. Enjekterör indir: [Xenos](https://www.unknowncheats.me/forum/general-programming-and-reversing/124013-xenos-injector-v2-3-2-a.html)
+3. Rockstar Launcher'da GTA V Enhanced'ı seç, Ayarlar'dan BattlEye'i kapat. Steam/Epic kullanıyorsan `-nobattleye` komut satırı parametresini ekle
+4. Oyunu başlat ve menüdeyken `Donerium.dll`'i enjekte et
 
-We currently do not have a BattlEye bypass, and legitimate hosts will eventually remove you due to a heartbeat failure. There is currently no way to stop this other than using an actual (private) bypass
+## Menüyü açma
 
-### I removed FSL and all my progress disappeared!
+`INSERT` veya `Ctrl+\` tuşlarına bas.
 
-FSL reroutes account save data to disk, so any progress made with FSL will only show up if you have FSL enabled. If you don't want this, you can also use YimMenuV2 without FSL, but this is not recommended
+## Sık karşılaşılan sorunlar
 
-### I removed FSL and the game doesn't start up anymore
+### Her beş dakikada bir herkese açık oturumdan atılıyorum
 
-This is a known issue; delete "Documents/GTAV Enhanced/Profiles" to fix
+Şu an BattlEye bypass'ımız yok; oturum sahipleri kalp atışı başarısızlığı nedeniyle seni atacaktır. Bunu yalnızca özel bir bypass durdurur.
+
+### FSL'i sildim ve bütün ilerlemem kayboldu!
+
+FSL hesap kayıt verilerini diske yönlendirir; FSL ile yapılan ilerleme yalnızca FSL açıkken görünür. İstiyorsan Donerium'u FSL olmadan da kullanabilirsin, ancak önerilmez.
+
+### FSL'i sildim ve oyun artık açılmıyor!
+
+Bilinen bir sorun: `Documents/GTAV Enhanced/Profiles` klasörünü silecek şekilde düzelt.
+
+## Derleme
+
+Proje CMake kullanır; `cmake` ile kur ve YimMenuV2 ile aynı bağımlılıklarla derle.
+
+> Bu proje GTA V için bir mod menüsüdür. Hile amaçlı kullanabilirsiniz; hesap yasağı riski size aittir.

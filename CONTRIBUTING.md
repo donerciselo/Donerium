@@ -1,4 +1,4 @@
-# YimMenu Contribution Guide (WIP)
+# Donerium Contribution Guide (WIP)
 
 ## Important!
 

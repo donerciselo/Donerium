@@ -1,6 +1,6 @@
-# YimMenuV2 Lua API
+# Donerium Lua API
 
-This document lists every global table, class, and function exposed to Lua scripts in YimMenuV2.
+This document lists every global table, class, and function exposed to Lua scripts in Donerium.
 
 Scripts live in `%appdata%/YimMenuV2/scripts`. Each script runs in its own sandboxed Lua (LuaJIT) state with the globals below already available.
 

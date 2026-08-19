@@ -1,0 +1,169 @@
+#include "DrawVariable.hpp"
+#include "core/frontend/widgets/imgui_bitfield.hpp"
+#include "types/script/scrVector.hpp"
+
+namespace YimMenu
+{
+	void DrawSavedVariableEdit(const SavedVariableBase& var, void* value)
+	{
+		if (!value)
+			return ImGui::TextDisabled("Geçersiz");
+
+		switch (var.type)
+		{
+		case VariableType::INT:
+		{
+			ImGui::SetNextItemWidth(200.f);
+			ImGui::InputScalar("Değer", ImGuiDataType_S32, static_cast<int*>(value));
+			break;
+		}
+		case VariableType::INT64:
+		{
+			ImGui::SetNextItemWidth(200.f);
+			ImGui::InputScalar("Değer", ImGuiDataType_S64, static_cast<std::int64_t*>(value));
+			break;
+		}
+		case VariableType::BITSET:
+		{
+			ImGui::SetNextItemWidth(200.f);
+			ImGui::Bitfield("Değer", static_cast<int*>(value));
+			break;
+		}
+		case VariableType::BOOL:
+		{
+			ImGui::Checkbox("Değer", static_cast<bool*>(value));
+			break;
+		}
+		case VariableType::FLOAT:
+		{
+			ImGui::SetNextItemWidth(200.f);
+			ImGui::InputScalar("Değer", ImGuiDataType_Float, static_cast<float*>(value));
+			break;
+		}
+		case VariableType::VECTOR:
+		{
+			auto vectorPtr = (rage::scrVector*)value;
+			ImGui::PushItemWidth(100.f);
+			ImGui::InputScalar("X", ImGuiDataType_Float, &vectorPtr->x);
+			ImGui::SameLine();
+			ImGui::InputScalar("Y", ImGuiDataType_Float, &vectorPtr->y);
+			ImGui::SameLine();
+			ImGui::InputScalar("Z", ImGuiDataType_Float, &vectorPtr->z);
+			ImGui::PopItemWidth();
+			break;
+		}
+		case VariableType::STRING:
+		{
+			ImGui::SetNextItemWidth(200.f);
+			ImGui::InputText("Değer", static_cast<char*>(value), 255);
+			break;
+		}
+		}
+	}
+
+	void DrawSavedVariablePreview(const SavedVariableBase& var, void* value)
+	{
+		if (!value)
+		{
+			ImGui::Selectable("Geçersiz", false, ImGuiSelectableFlags_Disabled);
+			return;
+		}
+
+		switch (var.type)
+		{
+		case VariableType::INT:
+		{
+			ImGui::Selectable(std::to_string(*static_cast<int*>(value)).c_str(), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::INT64:
+		{
+			ImGui::Selectable(std::to_string(*static_cast<std::int64_t*>(value)).c_str(), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::BITSET:
+		{
+			std::ostringstream bitset;
+			bitset << HEX(*static_cast<int*>(value));
+			ImGui::Selectable(bitset.str().c_str(), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::BOOL:
+		{
+			ImGui::Selectable(*static_cast<bool*>(value) ? "Doğru" : "Yanlış", false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::FLOAT:
+		{
+			ImGui::Selectable(std::to_string(*static_cast<float*>(value)).c_str(), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::VECTOR:
+		{
+			auto vectorPtr = (rage::scrVector*)value;
+			std::ostringstream vector;
+			vector << "X: " << std::fixed << std::setprecision(2) << vectorPtr->x << " Y: " << vectorPtr->y << " Z: " << vectorPtr->z;
+			ImGui::Selectable(vector.str().c_str(), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		case VariableType::STRING:
+		{
+			ImGui::Selectable(static_cast<char*>(value), false, ImGuiSelectableFlags_Disabled);
+			break;
+		}
+		}
+	}
+
+	void DrawSavedVariable(SavedVariableBase& var)
+	{
+		uint32_t step = 1;
+		uint32_t step_fast = 100;
+
+		ImGui::SetNextItemWidth(200.0f);
+		ImGui::InputScalar("Dizin", ImGuiDataType_U32, &var.base, &step, &step_fast);
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(100.0f);
+		ImGui::Combo("##var_type", (int*)&var.type, "Tam Sayı\0Tam Sayı64\0Bit Kümesi\0Bool\0Ondalık\0Vektör\0Metin\0");
+
+		for (int i = 0; i < var.appendages.size(); i++)
+		{
+			auto& item = var.appendages[i];
+			switch (item.type)
+			{
+			case VariableAppendage::Type::OFFSET:
+				ImGui::SetNextItemWidth(125.f);
+				ImGui::InputScalar(std::format("Konum##{}{}", i, (int)item.type).c_str(), ImGuiDataType_S32, &item.offset, &step, &step_fast);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(125.f);
+				ImGui::InputScalar(std::format("Boyut##{}{}", i, (int)item.type).c_str(), ImGuiDataType_S32, &item.size, &step, &step_fast);
+				break;
+			case VariableAppendage::Type::PLAYER_ID:
+				ImGui::SetNextItemWidth(125.f);
+				ImGui::InputScalar(std::format("Boyut##{}{}", i, (int)item.type).c_str(), ImGuiDataType_S32, &item.size, &step, &step_fast);
+				break;
+			}
+		}
+
+		if (ImGui::Button("Ofset Ekle"))
+			var.appendages.push_back({VariableAppendage::Type::OFFSET, 0LL, 0ULL});
+		ImGui::SameLine();
+		if (ImGui::Button("Oyuncu ID Oku Ekle"))
+			var.appendages.push_back({VariableAppendage::Type::PLAYER_ID, 0LL, 0ULL});
+
+		if (var.appendages.size() > 0)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Ofseti Kaldır"))
+			{
+				var.appendages.pop_back();
+			}
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Temizle"))
+		{
+			var.base = 0;
+			var.appendages.clear();
+		}
+	}
+}
